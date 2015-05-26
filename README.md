@@ -263,3 +263,83 @@
     ```
 
   * Verify, and commit!
+1. User can edit / update groceries
+  * Add edit link to grocery item show page
+
+    ```
+    div(class="page-header")
+      a(href='/groceries/' + grocery.id + '/edit' class="btn btn-warning pull-right") Edit this item
+      h1= grocery.item
+    ```
+
+  * Add edit route
+
+    ```
+    router.get(':id/edit', function(req, res, next) {
+      Grocery.findOne({_id: req.params.id}, function(err, grocery) {
+        if (err) return console.log(err);
+        res.render('groceries/edit', {grocery: grocery});
+      });
+    });
+    ```
+
+  * Add edit view
+
+    ```
+    extends ../layout
+
+    block content
+
+      h1(class="page-header") Edit #{grocery.item}
+
+      ol(class="breadcrumb")
+        li
+          a(href="/groceries") My Groceries
+        li
+          a(href="/groceries/" + grocery.id)= grocery.item
+        li(class="active") Edit
+
+      form(action='/groceries/' + grocery.id method='post' class='form-horizontal')
+
+        div(class='form-group')
+          label(class="col-sm-2 control-label") Item
+          div(class='col-sm-4')
+            input(type="text" name="grocery[item]" value="#{grocery.item}" class='form-control')
+
+        div(class="form-group")
+          label(class="col-sm-2 control-label") Quantity needed
+          div(class="col-sm-4")
+            input(type='number' name='grocery[quantity]' value="#{grocery.quantity}" class="form-control")
+
+        div(class="form-group")
+          div(class="col-sm-offset-2 col-sm-4")
+            div(class="checkbox")
+            label Have you picked up this item?
+              if grocery.inBasket
+                input(type='checkbox' name='grocery[inBasket]' checked="#{grocery.inBasket}" class="form-control")
+              else
+                input(type='checkbox' name='grocery[inBasket]' class="form-control")
+
+        div(class="form-group")
+          div(class="col-sm-offset-2 col-sm-4")
+            input(type='submit' name='commit' value='Update this item' class="btn btn-success")
+    ```
+
+  * Add update route
+
+    ```
+    router.post('/:id', function(req, res, next) {
+      Grocery.findOne({_id: req.params.id}, function(err, grocery) {
+        if (err) return console.log(err);
+        grocery.item = req.body['grocery[item]']
+        grocery.quantity = req.body['grocery[quantity]']
+        grocery.inBasket = req.body['grocery[inBasket]']
+        grocery.save(function(err, grocery) {
+          if (err) return console.log(err);
+          res.redirect('/groceries/' + grocery.id);
+        });
+      });
+    });
+    ```
+
+  * Verify and commit!

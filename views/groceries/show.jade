@@ -3,6 +3,7 @@ extend ../layout
 block content
 
   div(class="page-header")
+    a(href='/groceries/' + grocery.id + '/edit' class="btn btn-warning pull-right") Edit this item
     h1= grocery.item
 
   ol(class="breadcrumb")

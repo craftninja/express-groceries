@@ -33,6 +33,26 @@ router.get('/:id', function(req, res, next) {
     if (err) return console.log(err);
     res.render('groceries/show', {grocery: grocery});
   });
-})
+});
+
+router.get('/:id/edit', function(req, res, next) {
+  Grocery.findOne({_id: req.params.id}, function(err, grocery) {
+    if (err) return console.log(err);
+    res.render('groceries/edit', {grocery: grocery});
+  });
+});
+
+router.post('/:id', function(req, res, next) {
+  Grocery.findOne({_id: req.params.id}, function(err, grocery) {
+    if (err) return console.log(err);
+    grocery.item = req.body['grocery[item]']
+    grocery.quantity = req.body['grocery[quantity]']
+    grocery.inBasket = req.body['grocery[inBasket]']
+    grocery.save(function(err, grocery) {
+      if (err) return console.log(err);
+      res.redirect('/groceries/' + grocery.id);
+    });
+  });
+});
 
 module.exports = router;

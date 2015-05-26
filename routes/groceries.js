@@ -55,4 +55,12 @@ router.post('/:id', function(req, res, next) {
   });
 });
 
+router.get('/:id/delete', function(req, res, next) {
+  Grocery.findOne({_id: req.params.id}, function(err, grocery) {
+    if (err) return console.log(err);
+    grocery.remove();
+    res.redirect('/groceries');
+  });
+});
+
 module.exports = router;

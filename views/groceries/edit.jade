@@ -2,7 +2,9 @@ extends ../layout
 
 block content
 
-  h1(class="page-header") Edit #{grocery.item}
+  div(class="page-header")
+    a(href='/groceries/' + grocery.id + '/delete' class='btn btn-danger pull-right') Delete
+    h1 Edit #{grocery.item}
 
   ol(class="breadcrumb")
     li

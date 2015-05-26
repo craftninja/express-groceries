@@ -343,3 +343,25 @@
     ```
 
   * Verify and commit!
+1. User can delete grocery items
+  * Add delete link to grocery item edit page
+
+    ```
+    div(class="page-header")
+      a(href='/groceries/' + grocery.id + '/delete' class='btn btn-danger pull-right') Delete
+      h1 Edit #{grocery.item}
+    ```
+
+  * Add delete route
+
+    ```
+    router.get('/:id/delete', function(req, res, next) {
+      Grocery.findOne({_id: req.params.id}, function(err, grocery) {
+        if (err) return console.log(err);
+        grocery.remove();
+        res.redirect('/groceries');
+      });
+    });
+    ```
+
+  * Verify and commit!

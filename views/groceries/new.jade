@@ -1,0 +1,32 @@
+extends ../layout
+
+block content
+
+  h1(class="page-header") New Grocery item
+
+  ol(class="breadcrumb")
+    li
+      a(href="/groceries") My Groceries
+    li(class="active") New
+
+  form(action='/groceries' method='post' class='form-horizontal')
+
+    div(class='form-group')
+      label(class="col-sm-2 control-label") Item
+      div(class='col-sm-4')
+        input(type="text" name="grocery[item]" class='form-control')
+
+    div(class="form-group")
+      label(class="col-sm-2 control-label") Quantity needed
+      div(class="col-sm-4")
+        input(type='number' name='grocery[quantity]' class="form-control")
+
+    div(class="form-group")
+      div(class="col-sm-offset-2 col-sm-4")
+        div(class="checkbox")
+        label Have you picked up this item?
+          input(type='checkbox' name='grocery[inBasket]' class="form-control")
+
+    div(class="form-group")
+      div(class="col-sm-offset-2 col-sm-4")
+        input(type='submit' name='commit' value='Add this item' class="btn btn-success")

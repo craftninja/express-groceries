@@ -1,0 +1,16 @@
+extend ../layout
+
+block content
+
+  div(class="page-header")
+    h1= grocery.item
+
+  ol(class="breadcrumb")
+    li
+      a(href="/groceries") My Groceries
+    li(class="active")= grocery.item
+
+  if grocery.inBasket
+    h3 Need #{grocery.quantity} - got it
+  else
+    h3 Need #{grocery.quantity} - pick it up

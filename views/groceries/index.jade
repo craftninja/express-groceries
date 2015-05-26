@@ -2,11 +2,15 @@ extend ../layout
 
 block content
 
-  h1(class="page-header")  My Groceries
+  div(class="page-header")
+    a(href="groceries/new" class="btn btn-success pull-right") New Item
+    h1 My Groceries
 
   ul(class="list-group")
     each grocery in groceries
       if grocery.inBasket
-        li(class="list-group-item") #{grocery.item} (need #{grocery.quantity}) - got it
+        li(class="list-group-item")
+          a(href="/groceries/" + grocery.id) #{grocery.item} (need #{grocery.quantity}) - got it
       else
-        li(class="list-group-item") #{grocery.item} (need #{grocery.quantity}) - pick it up
+        li(class="list-group-item")
+          a(href="/groceries/" + grocery.id)  #{grocery.item} (need #{grocery.quantity}) - pick it up

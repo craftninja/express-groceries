@@ -145,3 +145,121 @@
     > db.groceries.insert({item: "eggs", quantity: 1, inBasket: false})
     WriteResult({ "nInserted" : 1 })
     ```
+
+1. User can add a new grocery and see it listed on the item's show page
+  * Add a link from groceries index to new
+
+    ```
+    div(class="page-header")
+      a(href="/groceries/new" class="btn btn-success pull-right") New Item
+      h1 My Groceries
+    ```
+
+  * Add new route
+
+    ```
+    router.get('/new', function(req, res, next) {
+      Grocery.findOne({_id: req.params.id}, function(err, grocery) {
+        if (err) return console.log(err);
+        res.render('groceries/new', {grocery: grocery});
+      });
+    });
+    ```
+
+  * Add new view
+
+    ```
+    extends ../layout
+
+    block content
+
+      h1(class="page-header") New Grocery item
+
+      ol(class="breadcrumb")
+        li
+          a(href="/groceries") My Groceries
+        li(class="active") New
+
+      form(action='/groceries' method='post' class='form-horizontal')
+
+        div(class='form-group')
+          label(class="col-sm-2 control-label") Item
+          div(class='col-sm-4')
+            input(type="text" name="grocery[item]" class='form-control')
+
+        div(class="form-group")
+          label(class="col-sm-2 control-label") Quantity needed
+          div(class="col-sm-4")
+            input(type='number' name='grocery[quantity]' class="form-control")
+
+        div(class="form-group")
+          div(class="col-sm-offset-2 col-sm-4")
+            div(class="checkbox")
+            label Have you picked up this item?
+              input(type='checkbox' name='grocery[inBasket]' class="form-control")
+
+        div(class="form-group")
+          div(class="col-sm-offset-2 col-sm-4")
+            input(type='submit' name='commit' value='Add this item' class="btn btn-success")
+    ```
+
+  * Add create route
+
+    ```
+    router.post('/', function(req, res, next) {
+      grocery = new Grocery({
+        item: req.body['grocery[item]'],
+        quantity: req.body['grocery[quantity]'],
+        inBasket: req.body['grocery[inBasket]']
+      });
+      grocery.save(function(err, grocery) {
+        res.redirect('/groceries/' + grocery.id);
+      });
+    });
+    ```
+
+  * Add show route
+
+    ```
+    router.get('/:id', function(req, res, next) {
+      Grocery.findOne({_id: req.params.id}, function(err, grocery) {
+        if (err) return console.log(err);
+        res.render('groceries/show', {grocery: grocery});
+      });
+    })
+    ```
+
+  * Add show page
+
+    ```
+    extend ../layout
+
+    block content
+
+      div(class="page-header")
+        h1= grocery.item
+
+      ol(class="breadcrumb")
+        li
+          a(href="/groceries") My Groceries
+        li(class="active")= grocery.item
+
+      if grocery.inBasket
+        h3 Need #{grocery.quantity} - got it
+      else
+        h3 Need #{grocery.quantity} - pick it up
+
+    ```
+
+  * Add link from index to show page
+
+    ```
+    if grocery.inBasket
+      li(class="list-group-item")
+        a(href="/groceries/" + grocery.id) #{grocery.item} (need #{grocery.quantity}) - got it
+    else
+      li(class="list-group-item")
+        a(href="/groceries/" + grocery.id)  #{grocery.item} (need #{grocery.quantity}) - pick it up
+    ```
+
+  * Verify, and commit!

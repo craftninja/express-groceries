@@ -226,7 +226,7 @@
         if (err) return console.log(err);
         res.render('groceries/show', {grocery: grocery});
       });
-    })
+    });
     ```
 
   * Add show page
